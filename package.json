@@ -2,7 +2,7 @@
   "name": "homebridge-ezframe-samsungframetv-artmode",
   "displayName": "EzFrame - Switch Art Mode for Samsung Frame TV",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Homebridge plugin to control Samsung Frame TV Art Mode via Apple Home, Shortcuts, and Siri.",
   "author": "viet241",
   "license": "Apache-2.0",
@@ -21,7 +21,12 @@
     "art-mode"
   ],
   "main": "dist/index.js",
-  "files": ["dist", "config.schema.json", "README.md", "install-guide.md"],
+  "files": [
+    "dist",
+    "config.schema.json",
+    "README.md",
+    "install-guide.md"
+  ],
   "engines": {
     "node": ">=20.18.0",
     "homebridge": ">=1.8.0"
