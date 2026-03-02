@@ -15,11 +15,29 @@ If you run **Homebridge Config UI X** (the web interface):
 5. Click **Install** and wait for the installation to finish.
 6. Restart Homebridge when prompted (or from the UI: **Settings** → restart).
 
-After that, add the platform and your TV(s) in **Plugins** → your plugin → **Settings**, or in **Config** (see section 4).
+After that, add the platform and your TV(s) in **Plugins** → your plugin → **Settings**, or in **Config** (see section 5).
 
 ---
 
-## 2. Install from npm (command line)
+## 2. Install via Homebridge Terminal (hb-service add)
+
+If you use **Homebridge Config UI X** and open the built-in **Terminal** (same environment as the service), you can install the plugin with:
+
+```bash
+hb-service add homebridge-ezframe-samsungframetv-artmode
+```
+
+To remove it later:
+
+```bash
+hb-service remove homebridge-ezframe-samsungframetv-artmode
+```
+
+Then add the platform and TV(s) in the UI or config (see section 5), and restart Homebridge if needed.
+
+---
+
+## 3. Install from npm (command line)
 On the machine where Homebridge runs:
 
 ```bash
@@ -30,7 +48,7 @@ Then restart Homebridge.
 
 ---
 
-## 3. Install from a packed file (.tgz) — optional
+## 4. Install from a packed file (.tgz) — optional
 
 Use this only when you can’t use the npm registry (e.g. air-gapped, or you want a specific build from GitHub Releases).
 
@@ -53,7 +71,7 @@ Replace `1.0.1` with your version. Then restart Homebridge.
 ---
 
 
-## 4. Configuration
+## 5. Configuration
 
 **Note:** You **must** press **Allow** on the TV when it prompts (first connection); otherwise the plugin cannot talk to the TV. Using a **static IP** for your Frame TV is recommended so the plugin can reach it reliably (set via your router or the TV’s network settings).
 
@@ -94,7 +112,7 @@ Default is `"Art Mode"`. The displayed name in Home will be **TV name + this suf
 
 ---
 
-## 5. First-time pairing
+## 6. First-time pairing
 
 1. Save the config and restart Homebridge.
 2. When the plugin talks to the TV for the first time, the TV will show **Allow** / **Deny**.
@@ -104,7 +122,7 @@ After that, the **Art Mode** switch for that TV should appear in the Home app.
 
 ---
 
-## 6. Optional: build and pack locally
+## 7. Optional: build and pack locally
 
 From the plugin source directory:
 

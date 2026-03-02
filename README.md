@@ -2,7 +2,9 @@
 
 Control **Samsung Frame TV Art Mode** from Apple Home, Shortcuts, and Siri via [Homebridge](https://homebridge.io).
 
-Each TV appears as a switch in the Home app. Turn Art Mode on or off with one tap or by asking Siri.
+You get **one simple switch** for Art Mode — no SmartThings, no extra features. Setting up Art Mode via SmartThings is much more involved; here you only need your TV’s **IP address** and **one tap on Allow** on the TV when prompted.
+
+One switch per TV in the Home app — tap it or say “Hey Siri” to turn Art Mode on or off.
 
 ---
 
