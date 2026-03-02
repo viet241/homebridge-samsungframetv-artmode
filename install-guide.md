@@ -4,65 +4,54 @@ Step-by-step installation for **homebridge-ezframe-samsungframetv-artmode**.
 
 ---
 
-## 1. Install from npm (recommended)
+## 1. Install via Homebridge UI (easiest)
 
-On the machine where Homebridge runs:
+If you run **Homebridge Config UI X** (the web interface):
 
-```bash
-sudo npm install -g homebridge-ezframe-samsungframetv-artmode
-```
+1. Open the Homebridge UI in your browser (e.g. `http://homebridge.local:8581` or your Homebridge URL).
+2. Go to **Plugins** (or **Plugins** → **Search** / **Discover**).
+3. In the search box, type **EzFrame** or **samsung frame art**.
+4. Find **EzFrame - Switch Art Mode for Samsung Frame TV** (or `homebridge-ezframe-samsungframetv-artmode`).
+5. Click **Install** and wait for the installation to finish.
+6. Restart Homebridge when prompted (or from the UI: **Settings** → restart).
 
-Then restart Homebridge (e.g. `sudo systemctl restart homebridge` or restart from the Homebridge UI).
+After that, add the platform and your TV(s) in **Plugins** → your plugin → **Settings**, or in **Config** (see section 4).
 
 ---
 
-## 2. Install from a packed file (.tgz)
+## 2. Install from npm (command line)
+On the machine where Homebridge runs:
 
-Use this when you don’t use npm (e.g. air-gapped or you use a build from GitHub Releases).
+```bash
+npm install -g homebridge-ezframe-samsungframetv-artmode
+```
 
-### 2.1 Get the package file
+Then restart Homebridge.
+
+---
+
+## 3. Install from a packed file (.tgz) — optional
+
+Use this only when you can’t use the npm registry (e.g. air-gapped, or you want a specific build from GitHub Releases).
+
+### 3.1 Get the package file
 
 - Download `homebridge-ezframe-samsungframetv-artmode-<version>.tgz` from [GitHub Releases](https://github.com/viet241/homebridge-samsungframetv-artmode/releases), or
 - Build it yourself: in the plugin folder run `npm run build && npm pack`.
 
-### 2.2 Install the .tgz
+### 3.2 Install the .tgz
 
 **Same machine as Homebridge:**
 
 ```bash
 cd /path/to/folder/containing/the-tgz-file
-sudo npm install -g ./homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz
+npm install -g ./homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz
 ```
 
 Replace `1.0.1` with your version. Then restart Homebridge.
 
 ---
 
-## 3. Install on Docker (e.g. Homebridge on NAS)
-
-If Homebridge runs in Docker (e.g. `oznu/homebridge`):
-
-1. Copy the `.tgz` into the container (e.g. into `/homebridge/`):
-
-   ```bash
-   docker cp homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz homebridge:/homebridge/
-   ```
-
-   Use your actual container name if it’s not `homebridge`.
-
-2. Install inside the container:
-
-   ```bash
-   docker exec -it homebridge sh -c "cd /homebridge && npm install ./homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz"
-   ```
-
-3. Restart the container:
-
-   ```bash
-   docker restart homebridge
-   ```
-
----
 
 ## 4. Configuration
 
@@ -70,18 +59,9 @@ If Homebridge runs in Docker (e.g. `oznu/homebridge`):
 
 You can set up the plugin via the **Homebridge UI** (recommended) or by editing `config.json` manually.
 
-### 4.1 Via Homebridge UI
+**Via Homebridge UI:** In **Plugins** → **EzFrame Homebridge**, add the platform and your TV(s) by **IP address**. Optionally set a custom **Art Mode** switch name. Save and restart; on first use, press **Allow** on the TV.
 
-1. Open the Homebridge UI (e.g. http://homebridge.local or your Homebridge URL).
-2. Go to **Plugins** (or **Plugins** → **Installed**) and find **EzFrame Homebridge**.
-3. Add the platform and configure your TV(s): add each TV by its **IP address**.
-4. Save and restart Homebridge. On first use, the TV will show **Allow** — press **Allow** once.
-
-Optional: in the plugin settings you can set a custom **Art Mode** switch name (default is `"Art Mode"`). The name in Home will be **TV name + this suffix** (e.g. “The Frame Art Mode”).
-
-### 4.2 Manual config (config.json)
-
-Edit Homebridge `config.json` (path depends on your setup, e.g. `/homebridge/config.json` in Docker):
+**Manual config (config.json):** Edit Homebridge `config.json` (path depends on your setup):
 
 ```json
 {
@@ -138,7 +118,6 @@ npm pack
 You’ll get `homebridge-ezframe-samsungframetv-artmode-<version>.tgz`. Install it with:
 
 ```bash
-sudo npm install -g ./homebridge-ezframe-samsungframetv-artmode-<version>.tgz
+npm install -g ./homebridge-ezframe-samsungframetv-artmode-<version>.tgz
 ```
 
-(Or use the Docker steps above and copy this `.tgz` into the container.)

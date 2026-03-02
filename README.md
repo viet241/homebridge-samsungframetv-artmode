@@ -22,21 +22,32 @@ This plugin works alongside **[EzFrame](https://ezframe.viet241.com)** — a fre
 
 ## Installation
 
-### From npm (recommended)
+### Via Homebridge UI (easiest)
+
+If you use **Homebridge Config UI X** (web interface):
+
+1. Open the Homebridge UI (e.g. http://homebridge.local:8581).
+2. Go to **Plugins** → **Search** (or **Plugins** → **Discover**).
+3. Search for **EzFrame** or **homebridge-ezframe-samsungframetv-artmode**.
+4. Click **Install**, then restart Homebridge when prompted.
+
+### From npm (command line)
+
+The plugin is published on [npm](https://www.npmjs.com/package/homebridge-ezframe-samsungframetv-artmode). One command installs it — **no .tgz file needed**:
 
 ```bash
-sudo npm install -g homebridge-ezframe-samsungframetv-artmode
+npm install -g homebridge-ezframe-samsungframetv-artmode
 ```
 
-### From packed file (tgz)
+### From packed file (.tgz) — optional
 
-If you use a pre-built package (e.g. from [GitHub Releases](https://github.com/viet241/homebridge-samsungframetv-artmode/releases)):
+Only if you can’t use the npm registry (e.g. offline, or you want a specific build from [GitHub Releases](https://github.com/viet241/homebridge-samsungframetv-artmode/releases)):
 
 ```bash
-sudo npm install -g ./homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz
+npm install -g ./homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz
 ```
 
-Configuration (platform, TVs, optional switch name) can be done via the **Homebridge UI** or by editing `config.json`. You **must** press **Allow** on the TV when prompted, and using a **static IP** for the TV is recommended. See [install-guide.md](./install-guide.md) for Docker, NAS, configuration steps, and first-time pairing.
+Configuration (platform, TVs, optional switch name) can be done via the **Homebridge UI** or by editing `config.json`. You **must** press **Allow** on the TV when prompted, and using a **static IP** for the TV is recommended. See [install-guide.md](./install-guide.md) for configuration steps and first-time pairing.
 
 ---
 
@@ -74,7 +85,7 @@ This project is completely free to use. If you find this plugin useful for your 
 
 ## Links
 
-- **npm:** [homebridge-ezframe-samsungframetv-artmode](https://www.npmjs.com/package/homebridge-ezframe-samsungframetv-artmode) - pending
+- **npm:** [homebridge-ezframe-samsungframetv-artmode](https://www.npmjs.com/package/homebridge-ezframe-samsungframetv-artmode)
 - **Repository:** [viet241/homebridge-samsungframetv-artmode](https://github.com/viet241/homebridge-samsungframetv-artmode)
 - **Issues:** [GitHub Issues](https://github.com/viet241/homebridge-samsungframetv-artmode/issues)
 
