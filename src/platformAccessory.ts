@@ -1,6 +1,6 @@
 import type { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
-import { getArtModeStatus, setArtModeStatus } from './samsungArtClient.js';
+import { getArtModeStatus, normalizeWsError, setArtModeStatus } from './samsungArtClient.js';
 import type { EzFrameHomebridgePlatform } from './platform.js';
 import type { TVConfig } from './platform.js';
 import { DEFAULT_SWITCH_NAMES } from './settings.js';
@@ -42,7 +42,9 @@ export class EzFrameAccessory {
     this.removeLegacyServices();
 
     this.updateStatus().catch((err) => {
-      this.platform.log.warn('Initial status fetch failed:', err.message);
+      this.platform.log.warn('Initial status fetch failed:', normalizeWsError(err).message);
+      this.artModeOn = false;
+      this.artService.updateCharacteristic(this.platform.Characteristic.On, false);
     });
   }
 
@@ -72,7 +74,9 @@ export class EzFrameAccessory {
       this.artModeOn = artStatus === 'on';
       this.artService.updateCharacteristic(this.platform.Characteristic.On, this.artModeOn);
     } catch (err) {
-      this.platform.log.warn('Failed to fetch status:', (err as Error).message);
+      this.platform.log.warn('Art Mode status unavailable:', normalizeWsError(err).message);
+      this.artModeOn = false;
+      this.artService.updateCharacteristic(this.platform.Characteristic.On, false);
     }
   }
 
@@ -104,8 +108,10 @@ export class EzFrameAccessory {
       this.artModeOn = status === 'on';
       return this.artModeOn;
     } catch (err) {
-      this.platform.log.warn('Failed to get Art Mode status:', (err as Error).message);
-      return this.artModeOn;
+      this.platform.log.warn('Art Mode status unavailable:', normalizeWsError(err).message);
+      this.artModeOn = false;
+      this.artService.updateCharacteristic(this.platform.Characteristic.On, false);
+      return false;
     }
   }
 

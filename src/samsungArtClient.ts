@@ -26,6 +26,20 @@ function safeClose(ws: WebSocket): void {
   } catch { /* ignore */ }
 }
 
+/** Normalize WebSocket/library errors (e.g. invalid status code 1005) to a user-friendly Error. */
+export function normalizeWsError(err: unknown): Error {
+  if (err instanceof Error) {
+    const msg = err.message || '';
+    if (msg.includes('1005') || msg.includes('Invalid WebSocket frame') || msg.includes('WebSocket closed')) {
+      return new Error('TV connection closed or temporarily unavailable');
+    }
+    if (msg.includes('ECONNREFUSED') || msg.includes('ETIMEDOUT') || msg.includes('ENOTFOUND')) {
+      return new Error('TV unreachable. Check IP and network.');
+    }
+  }
+  return err instanceof Error ? err : new Error(String(err));
+}
+
 function base64Encode(str: string): string {
   return Buffer.from(str, 'utf-8').toString('base64');
 }
@@ -371,15 +385,15 @@ function runChannelSession(opts: ChannelSessionOpts): Promise<void> {
       ws.on('error', (err) => {
         clearTimeout(timeout);
         if (!resolved && urlIndex < urls.length - 1) {
-          debug(`Connection failed: ${err.message}, trying next...`);
+          debug(`Connection failed: ${(err as Error).message}, trying next...`);
           tryConnect(urlIndex + 1);
         } else {
-          finish(err);
+          finish(normalizeWsError(err));
         }
       });
 
       ws.on('close', () => {
-        if (!resolved) finish(new Error('WebSocket closed'));
+        if (!resolved) finish(normalizeWsError(new Error('WebSocket closed')));
       });
     };
 
@@ -471,15 +485,15 @@ function runArtChannelSession(opts: ArtChannelSessionOpts): Promise<Record<strin
       ws.on('error', (err) => {
         clearTimeout(timeout);
         if (!resolved && urlIndex < urls.length - 1) {
-          debug(`Connection failed: ${err.message}, trying next...`);
+          debug(`Connection failed: ${(err as Error).message}, trying next...`);
           tryConnect(urlIndex + 1);
         } else {
-          finish(undefined, err);
+          finish(undefined, normalizeWsError(err));
         }
       });
 
       ws.on('close', () => {
-        if (!resolved) finish(undefined, new Error('WebSocket closed before response'));
+        if (!resolved) finish(undefined, normalizeWsError(new Error('WebSocket closed before response')));
       });
     };
 

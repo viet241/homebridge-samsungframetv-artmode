@@ -52,10 +52,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: EzFrame Homebridge Plugin ${{ steps.version.outputs.version }}
+          name: homebridge-ezframe-samsungframetv-artmode-v${{ steps.version.outputs.version }}
           body: |
-            ## EzFrame Homebridge Plugin ${{ steps.version.outputs.version }}
-            Control Samsung Frame TV Art Mode from Apple Home / Siri.
+            ## EzFrame Homebridge Plugin v${{ steps.version.outputs.version }}
+            Homebridge plugin to switch Samsung Frame TV Art Mode via Apple Home, Shortcuts, and Siri.
             - **Install from npm:** `npm install -g homebridge-ezframe-samsungframetv-artmode`
             - Or install from the attached `.tgz`: `npm install -g ./homebridge-ezframe-samsungframetv-artmode-*.tgz`
           files: homebridge-ezframe-samsungframetv-artmode-*.tgz
