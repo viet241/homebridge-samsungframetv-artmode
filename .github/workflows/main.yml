@@ -1,5 +1,5 @@
 # Release EzFrame Homebridge plugin: build, npm pack, attach .tgz to GitHub Release.
-# Trigger: push a tag matching ezframe-v* (e.g. ezframe-v1.0.2).
+# Trigger: push a tag matching ezframe-homebridge-plugin-v* (e.g. ezframe-homebridge-plugin-v1.0.0).
 # .tgz from npm pack is the standard archive; no need for a separate .zip.
 
 name: Release EzFrame Homebridge Plugin
@@ -7,7 +7,7 @@ name: Release EzFrame Homebridge Plugin
 on:
   push:
     tags:
-      - 'ezframe-v*'
+      - 'ezframe-homebridge-plugin-v*'
 
 jobs:
   release:

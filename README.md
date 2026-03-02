@@ -6,11 +6,17 @@ Each TV appears as a switch in the Home app. Turn Art Mode on or off with one ta
 
 ---
 
+## EzFrame Desktop App
+
+This plugin works alongside **[EzFrame](https://ezframe.viet241.com)** — a free desktop app (macOS, Windows, Linux) to manage art on your Samsung The Frame TV from your computer: upload images, browse and set art, and control the TV with hotkeys. If you use a Samsung Frame TV, check it out: [ezframe.viet241.com](https://ezframe.viet241.com).
+
+---
+
 ## Requirements
 
-- **Node.js** `^20.18.0`, `^22.10.0`, or `^24.0.0`
-- **Homebridge** `^1.8.0` or `^2.0.0`
-- Samsung Frame TV (2017 or newer with Art Mode) on the same network
+- **Node.js** `^20.18.0` or later
+- **Homebridge** `^1.8.0` or later
+- Samsung The Frame TV 2024 or newer with Art Mode is recommended (older devices have not been tested)
 
 ---
 
@@ -30,42 +36,7 @@ If you use a pre-built package (e.g. from [GitHub Releases](https://github.com/v
 sudo npm install -g ./homebridge-ezframe-samsungframetv-artmode-1.0.1.tgz
 ```
 
-See [install-guide.md](./install-guide.md) for Docker, NAS, and first-time pairing.
-
----
-
-## Configuration
-
-Add the platform to your Homebridge `config.json`:
-
-```json
-{
-  "platforms": [
-    {
-      "platform": "EzFrame Homebridge",
-      "name": "EzFrame Homebridge",
-      "tvs": [
-        { "ip": "192.168.1.100" }
-      ]
-    }
-  ]
-}
-```
-
-- **`platform`** must be exactly `"EzFrame Homebridge"`.
-- **`tvs`** – array of TVs. Each entry needs at least **`ip`** (your TV’s local IP).
-
-**First use:** The TV will show an **Allow** prompt. Press **Allow** once; the plugin saves the token and won’t ask again.
-
-### Optional: custom switch name
-
-```json
-"switchNames": {
-  "artMode": "Art Mode"
-}
-```
-
-Default is `"Art Mode"`. The displayed name in Home will be **TV name + this suffix** (e.g. “The Frame Art Mode”).
+Configuration (platform, TVs, optional switch name) can be done via the **Homebridge UI** or by editing `config.json`. You **must** press **Allow** on the TV when prompted, and using a **static IP** for the TV is recommended. See [install-guide.md](./install-guide.md) for Docker, NAS, configuration steps, and first-time pairing.
 
 ---
 
@@ -86,9 +57,15 @@ Default is `"Art Mode"`. The displayed name in Home will be **TV name + this suf
 
 ---
 
+## Support
+
+This project is completely free to use. If you find this plugin useful for your The Frame TV, consider [buying me a coffee](https://www.buymeacoffee.com/viet241) to support my efforts.
+
+---
+
 ## Links
 
-- **npm:** [homebridge-ezframe-samsungframetv-artmode](https://www.npmjs.com/package/homebridge-ezframe-samsungframetv-artmode)
+- **npm:** [homebridge-ezframe-samsungframetv-artmode](https://www.npmjs.com/package/homebridge-ezframe-samsungframetv-artmode) - pending
 - **Repository:** [viet241/homebridge-samsungframetv-artmode](https://github.com/viet241/homebridge-samsungframetv-artmode)
 - **Issues:** [GitHub Issues](https://github.com/viet241/homebridge-samsungframetv-artmode/issues)
 

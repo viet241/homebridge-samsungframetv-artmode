@@ -64,9 +64,24 @@ If Homebridge runs in Docker (e.g. `oznu/homebridge`):
 
 ---
 
-## 4. Add configuration
+## 4. Configuration
 
-Edit Homebridge `config.json` and add the platform (path to config depends on your setup, e.g. `/homebridge/config.json` in Docker):
+**Note:** You **must** press **Allow** on the TV when it prompts (first connection); otherwise the plugin cannot talk to the TV. Using a **static IP** for your Frame TV is recommended so the plugin can reach it reliably (set via your router or the TV’s network settings).
+
+You can set up the plugin via the **Homebridge UI** (recommended) or by editing `config.json` manually.
+
+### 4.1 Via Homebridge UI
+
+1. Open the Homebridge UI (e.g. http://homebridge.local or your Homebridge URL).
+2. Go to **Plugins** (or **Plugins** → **Installed**) and find **EzFrame Homebridge**.
+3. Add the platform and configure your TV(s): add each TV by its **IP address**.
+4. Save and restart Homebridge. On first use, the TV will show **Allow** — press **Allow** once.
+
+Optional: in the plugin settings you can set a custom **Art Mode** switch name (default is `"Art Mode"`). The name in Home will be **TV name + this suffix** (e.g. “The Frame Art Mode”).
+
+### 4.2 Manual config (config.json)
+
+Edit Homebridge `config.json` (path depends on your setup, e.g. `/homebridge/config.json` in Docker):
 
 ```json
 {
@@ -82,7 +97,20 @@ Edit Homebridge `config.json` and add the platform (path to config depends on yo
 }
 ```
 
+- **`platform`** must be exactly `"EzFrame Homebridge"`.
+- **`tvs`** – array of TVs. Each entry needs at least **`ip`** (your TV’s local IP).
+
 Replace `192.168.1.100` with your Samsung Frame TV’s IP.
+
+**Optional: custom switch name**
+
+```json
+"switchNames": {
+  "artMode": "Art Mode"
+}
+```
+
+Default is `"Art Mode"`. The displayed name in Home will be **TV name + this suffix** (e.g. “The Frame Art Mode”).
 
 ---
 
@@ -90,7 +118,7 @@ Replace `192.168.1.100` with your Samsung Frame TV’s IP.
 
 1. Save the config and restart Homebridge.
 2. When the plugin talks to the TV for the first time, the TV will show **Allow** / **Deny**.
-3. Press **Allow** on the TV. The plugin stores the token (e.g. in `ezframe-tokens.json` next to the Homebridge config) and won’t ask again.
+3. You **must** press **Allow** on the TV. The plugin stores the token (e.g. in `ezframe-tokens.json` next to the Homebridge config) and won’t ask again. If you miss it, restart Homebridge and watch the TV for the prompt again.
 
 After that, the **Art Mode** switch for that TV should appear in the Home app.
 
