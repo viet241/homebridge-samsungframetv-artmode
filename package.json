@@ -1,0 +1,53 @@
+{
+  "name": "homebridge-ezframe-samsungframetv-artmode",
+  "displayName": "EzFrame - Switch Art Mode for Samsung Frame TV",
+  "type": "module",
+  "version": "1.0.1",
+  "description": "Homebridge plugin to control Samsung Frame TV Art Mode via Apple Home, Shortcuts, and Siri.",
+  "author": "viet241",
+  "license": "Apache-2.0",
+  "homepage": "https://ezframe.viet241.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viet241/homebridge-samsungframetv-artmode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/viet241/homebridge-samsungframetv-artmode/issues"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "samsung",
+    "frame",
+    "art-mode"
+  ],
+  "main": "dist/index.js",
+  "files": ["dist", "config.schema.json", "README.md", "install-guide.md"],
+  "engines": {
+    "node": "^20.18.0 || ^22.10.0 || ^24.0.0",
+    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+  },
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "lint": "eslint . --max-warnings=0",
+    "prepublishOnly": "npm run build",
+    "watch": "npm run build && npm link && nodemon",
+    "test:tv": "tsx scripts/test-tv.ts"
+  },
+  "dependencies": {
+    "homebridge-lib": "^7.1.12",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/ws": "^8.5.13",
+    "eslint": "^9.39.1",
+    "homebridge": "^2.0.0-beta.55",
+    "nodemon": "^3.1.11",
+    "rimraf": "^6.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4"
+  }
+}

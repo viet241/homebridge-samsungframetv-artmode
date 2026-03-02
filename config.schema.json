@@ -1,0 +1,51 @@
+{
+    "pluginAlias": "EzFrame Homebridge",
+    "pluginType": "platform",
+    "singular": true,
+    "strictValidation": false,
+    "schema": {
+        "type": "object",
+        "required": [
+            "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "name": {
+                "title": "Platform Name",
+                "type": "string",
+                "default": "EzFrame Homebridge"
+            },
+            "switchNames": {
+                "title": "Switch Labels",
+                "type": "object",
+                "description": "Custom names for switches (optional). Format: TV Name + suffix. E.g. 'The Frame Art Mode'.",
+                "properties": {
+                    "artMode": {
+                        "title": "Art Mode",
+                        "type": "string",
+                        "default": "Art Mode"
+                    }
+                }
+            },
+            "tvs": {
+                "title": "Samsung Frame TVs",
+                "type": "array",
+                "description": "Add TV IP addresses. On first use, TV will show Allow - press it to pair. Token is saved automatically.",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "ip"
+                    ],
+                    "properties": {
+                        "ip": {
+                            "title": "TV IP Address",
+                            "type": "string",
+                            "format": "ipv4",
+                            "description": "Local IP of your Samsung Frame TV (e.g. 192.168.1.100)"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

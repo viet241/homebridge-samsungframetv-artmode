@@ -1,0 +1,62 @@
+# Release EzFrame Homebridge plugin: build, npm pack, attach .tgz to GitHub Release.
+# Trigger: push a tag matching ezframe-v* (e.g. ezframe-v1.0.2).
+# .tgz from npm pack is the standard archive; no need for a separate .zip.
+
+name: Release EzFrame Homebridge Plugin
+
+on:
+  push:
+    tags:
+      - 'ezframe-v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Get version from package.json
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Create package (npm pack)
+        run: npm pack
+
+      - name: Upload .tgz artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: homebridge-ezframe-samsungframetv-artmode-${{ steps.version.outputs.version }}.tgz
+          path: homebridge-ezframe-samsungframetv-artmode-*.tgz
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: EzFrame Homebridge Plugin ${{ steps.version.outputs.version }}
+          body: |
+            ## EzFrame Homebridge Plugin ${{ steps.version.outputs.version }}
+            Control Samsung Frame TV Art Mode from Apple Home / Siri.
+            - **Install from npm:** `npm install -g homebridge-ezframe-samsungframetv-artmode`
+            - Or install from the attached `.tgz`: `npm install -g ./homebridge-ezframe-samsungframetv-artmode-*.tgz`
+          files: homebridge-ezframe-samsungframetv-artmode-*.tgz
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
