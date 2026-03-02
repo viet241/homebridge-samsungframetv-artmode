@@ -59,7 +59,16 @@ Configuration (platform, TVs, optional switch name) can be done via the **Homebr
 
 ## Support
 
-This project is completely free to use. If you find this plugin useful for your The Frame TV, consider [buying me a coffee](https://www.buymeacoffee.com/viet241) to support my efforts.
+This project is completely free to use. If you find this plugin useful for your The Frame TV, consider supporting my efforts:
+
+<a href="https://ko-fi.com/viet241" target="_blank" rel="noopener noreferrer">
+  <img
+    height="36"
+    style="border: 0px; height: 36px;"
+    src="https://storage.ko-fi.com/cdn/kofi6.png?v=6"
+    alt="Buy Me a Coffee at ko-fi.com"
+  />
+</a>
 
 ---
 
