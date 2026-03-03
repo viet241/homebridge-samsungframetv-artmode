@@ -11,7 +11,7 @@ If you run **Homebridge Config UI X** (the web interface):
 1. Open the Homebridge UI in your browser (e.g. `http://homebridge.local:8581` or your Homebridge URL).
 2. Go to **Plugins** (or **Plugins** → **Search** / **Discover**).
 3. In the search box, type **EzFrame** or **samsung frame art**.
-4. Find **EzFrame - Switch Art Mode for Samsung Frame TV** (or `homebridge-ezframe-samsungframetv-artmode`).
+4. Find `homebridge-ezframe-samsungframetv-artmode`).
 5. Click **Install** and wait for the installation to finish.
 6. Restart Homebridge when prompted (or from the UI: **Settings** → restart).
 

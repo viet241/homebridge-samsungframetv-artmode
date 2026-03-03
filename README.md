@@ -30,7 +30,7 @@ If you use **Homebridge Config UI X** (web interface):
 
 1. Open the Homebridge UI (e.g. http://homebridge.local:8581).
 2. Go to **Plugins** → **Search** (or **Plugins** → **Discover**).
-3. Search for **EzFrame** or **homebridge-ezframe-samsungframetv-artmode**.
+3. Search for **homebridge-ezframe-samsungframetv-artmode**.
 4. Click **Install**, then restart Homebridge when prompted.
 
 ### From npm (command line)
