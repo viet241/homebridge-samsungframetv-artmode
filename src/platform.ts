@@ -39,6 +39,9 @@ export class EzFrameHomebridgePlatform implements DynamicPlatformPlugin {
   public readonly accessories: Map<string, PlatformAccessory> = new Map();
   private discoveredCacheUUIDs: string[] = [];
   private pairingByIP: Map<string, Promise<SamsungTVConfig>> = new Map();
+  /** After a failed pairing, block new attempts briefly to reduce repeated Allow prompts. */
+  private pairingCooldownUntil: Map<string, number> = new Map();
+  private readonly pairingCooldownMs = 8000;
 
   constructor(
     public readonly log: Logging,
@@ -69,11 +72,17 @@ export class EzFrameHomebridgePlatform implements DynamicPlatformPlugin {
    * Resolve token for TV: config > storage > request via pairing.
    * Call before any art API; may throw if pairing fails.
    * Deduplicates concurrent pairing requests per IP to avoid Allow spam.
+   * After a failure, enforces a short cooldown (see pairingCooldownMs).
    */
   async ensureTokenForTV(tv: TVConfig): Promise<SamsungTVConfig> {
     const token = getToken(tv.ip);
     if (token) {
       return { host: tv.ip, token };
+    }
+    const until = this.pairingCooldownUntil.get(tv.ip);
+    if (until !== undefined && Date.now() < until) {
+      const sec = Math.max(1, Math.ceil((until - Date.now()) / 1000));
+      throw new Error(`EZFRAME_PAIRING_COOLDOWN: Retry in ${sec}s`);
     }
     const existing = this.pairingByIP.get(tv.ip);
     if (existing) {
@@ -83,9 +92,14 @@ export class EzFrameHomebridgePlatform implements DynamicPlatformPlugin {
     this.log.info(`[${label}] No token. Requesting pairing - press Allow on TV...`);
     const pairingPromise = requestToken(tv.ip, (m) => this.log.debug(`[${label}] ${m}`))
       .then((newToken) => {
+        this.pairingCooldownUntil.delete(tv.ip);
         setToken(tv.ip, newToken);
         this.log.info(`[${label}] Paired successfully, token saved`);
         return { host: tv.ip, token: newToken };
+      })
+      .catch((err: Error) => {
+        this.pairingCooldownUntil.set(tv.ip, Date.now() + this.pairingCooldownMs);
+        throw err;
       })
       .finally(() => {
         this.pairingByIP.delete(tv.ip);
@@ -94,8 +108,41 @@ export class EzFrameHomebridgePlatform implements DynamicPlatformPlugin {
     return pairingPromise;
   }
 
+  /**
+   * Start pairing if there is no token, without blocking the caller.
+   * Respects cooldown and in-flight pairing. Invokes onPaired after a successful pair.
+   */
+  startPairingIfNeeded(tv: TVConfig, onPaired?: () => void): void {
+    if (getToken(tv.ip)) {
+      onPaired?.();
+      return;
+    }
+    const until = this.pairingCooldownUntil.get(tv.ip);
+    if (until !== undefined && Date.now() < until) {
+      return;
+    }
+    const existing = this.pairingByIP.get(tv.ip);
+    if (existing) {
+      void existing
+        .then(() => onPaired?.())
+        .catch(() => {
+          /* failure already reflected in logs / cooldown */
+        });
+      return;
+    }
+    const label = tv.name ?? tv.ip;
+    void this.ensureTokenForTV(tv)
+      .then(() => onPaired?.())
+      .catch((err: Error) => {
+        if (!err.message?.includes('EZFRAME_PAIRING_COOLDOWN')) {
+          this.log.debug(`[${label}] Background pairing: ${err.message}`);
+        }
+      });
+  }
+
   clearTokenForIP(ip: string): void {
     clearToken(ip);
+    this.pairingCooldownUntil.delete(ip);
   }
 
   getSwitchNames(cfg?: EzFramePlatformConfig): { artMode: string } {

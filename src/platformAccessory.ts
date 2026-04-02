@@ -4,6 +4,7 @@ import { getArtModeStatus, normalizeWsError, setArtModeStatus } from './samsungA
 import type { EzFrameHomebridgePlatform } from './platform.js';
 import type { TVConfig } from './platform.js';
 import { DEFAULT_SWITCH_NAMES } from './settings.js';
+import { getToken } from './tokenStorage.js';
 
 /**
  * Samsung Frame TV accessory - Art Mode switch only.
@@ -11,6 +12,7 @@ import { DEFAULT_SWITCH_NAMES } from './settings.js';
 export class EzFrameAccessory {
   private readonly artService: Service;
   private artModeOn = false;
+  private statusUpdateInFlight = false;
 
   constructor(
     private readonly platform: EzFrameHomebridgePlatform,
@@ -41,11 +43,7 @@ export class EzFrameAccessory {
 
     this.removeLegacyServices();
 
-    this.updateStatus().catch((err) => {
-      this.platform.log.warn('Initial status fetch failed:', normalizeWsError(err).message);
-      this.artModeOn = false;
-      this.artService.updateCharacteristic(this.platform.Characteristic.On, false);
-    });
+    void this.updateStatus();
   }
 
   private removeLegacyServices(): void {
@@ -67,6 +65,14 @@ export class EzFrameAccessory {
 
   private async updateStatus(): Promise<void> {
     const tv = this.accessory.context.tv as TVConfig;
+    if (!getToken(tv.ip)) {
+      this.platform.startPairingIfNeeded(tv, () => void this.updateStatus());
+      return;
+    }
+    if (this.statusUpdateInFlight) {
+      return;
+    }
+    this.statusUpdateInFlight = true;
     try {
       const artStatus = await this.execWithTokenRetry((config) =>
         getArtModeStatus(config, (m) => this.log(m)),
@@ -77,6 +83,8 @@ export class EzFrameAccessory {
       this.platform.log.warn('Art Mode status unavailable:', normalizeWsError(err).message);
       this.artModeOn = false;
       this.artService.updateCharacteristic(this.platform.Characteristic.On, false);
+    } finally {
+      this.statusUpdateInFlight = false;
     }
   }
 
@@ -93,26 +101,27 @@ export class EzFrameAccessory {
       this.artModeOn = on;
       this.platform.log.info(`Art Mode ${status}`);
     } catch (err) {
-      this.platform.log.error('Failed to set Art Mode:', (err as Error).message);
+      const msg = (err as Error).message;
+      if (msg.includes('EZFRAME_PAIRING_COOLDOWN')) {
+        this.platform.log.warn(msg);
+        throw new this.platform.api.hap.HapStatusError(
+          this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE,
+        );
+      }
+      this.platform.log.error('Failed to set Art Mode:', msg);
       throw new this.platform.api.hap.HapStatusError(
         this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE,
       );
     }
   }
 
+  /**
+   * Return cached state immediately so Homebridge does not block on pairing (up to 30s).
+   * Refreshes Art Mode in the background via updateStatus.
+   */
   async getArtOn(): Promise<CharacteristicValue> {
-    try {
-      const status = await this.execWithTokenRetry((config) =>
-        getArtModeStatus(config, (m) => this.log(m)),
-      );
-      this.artModeOn = status === 'on';
-      return this.artModeOn;
-    } catch (err) {
-      this.platform.log.warn('Art Mode status unavailable:', normalizeWsError(err).message);
-      this.artModeOn = false;
-      this.artService.updateCharacteristic(this.platform.Characteristic.On, false);
-      return false;
-    }
+    void this.updateStatus();
+    return this.artModeOn;
   }
 
   /**
